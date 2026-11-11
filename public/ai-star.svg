@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Yellow star">
+  <defs>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fff4a2"/><stop offset=".55" stop-color="#ffd54f"/><stop offset="1" stop-color="#f5a623"/></linearGradient>
+  </defs>
+  <path d="M32 3.5 40.2 21l19.2 2.6-14 13.5 3.5 19.1L32 47.1 15.1 56.2l3.5-19.1-14-13.5L23.8 21Z" fill="url(#gold)" stroke="#d99413" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="m32 10 6.5 14 15.4 2.1-11.2 10.8 2.8 15.3L32 44.9l-13.5 7.3 2.8-15.3L10.1 26l15.4-2.1Z" fill="none" stroke="#fff7c4" stroke-width="2" stroke-linejoin="round" opacity=".8"/>
+</svg>
