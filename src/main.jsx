@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Award, BookOpen, Code2, Gamepad2, Keyboard, Play, RotateCcw, Trophy, Volume2, VolumeX, X } from 'lucide-react';
 import './style.css';
 
-const PYTHON = ['NumPy','Pandas','Django','Flask','PyTorch','SciPy','FastAPI','Matplotlib','Requests','TensorFlow'];
-const JAVASCRIPT = ['React','Vue','Express','Lodash','Next.js','Svelte','Angular'];
-const JAVA = ['Spring','Hibernate','JUnit','Maven','Guava','Log4j'];
+const PYTHON = ['NumPy','Pandas','Django','Flask','PyTorch','SciPy','FastAPI','Matplotlib','Requests','TensorFlow','Pillow','Pygame','BeautifulSoup','SQLAlchemy','pytest','Celery','Polars','OpenCV','scikit-learn','Jupyter'];
+const JAVASCRIPT = ['React','Vue','Express','Lodash','Next.js','Svelte','Angular','D3.js','Axios','jQuery','Redux','Three.js','Jest','Vite','Astro','Nuxt','Socket.IO'];
+const JAVA = ['Spring','Hibernate','JUnit','Maven','Guava','Log4j','Jackson','Mockito','Gradle','Netty','JavaFX','Apache POI','JDBC','JUnit Jupiter'];
 const ALL = [...PYTHON.map(label => ({label, kind:'python'})), ...JAVASCRIPT.map(label => ({label, kind:'javascript'})), ...JAVA.map(label => ({label, kind:'java'}))];
 const GAME_SECONDS = 45;
 const BASKET_SPEED = 55;
@@ -13,6 +13,7 @@ const WRONG_CATCH_SLOW_MS = 400;
 const WRONG_CATCH_SPEED = .4;
 const MAX_USER_DROP_BONUS = 30;
 const DROP_BONUS_INTERVAL_MS = 800;
+const BASE_SPAWN_INTERVAL = .76;
 const STORAGE_KEY = 'pycatch-leaderboard-v1';
 const getGamepadDirection = () => {
   try {
@@ -145,8 +146,6 @@ function App() {
       if (!lastFrame.current) lastFrame.current = timestamp;
       const dt = Math.min((timestamp - lastFrame.current) / 1000, .05);
       lastFrame.current = timestamp; spawnTime.current += dt;
-      const shouldSpawn = spawnTime.current >= .76;
-      if (shouldSpawn) spawnTime.current = 0;
       const prev = gameRef.current;
         const time = Math.max(0, prev.time - dt);
         const slowFactor = timestamp < slowUntil.current ? WRONG_CATCH_SPEED : 1;
@@ -158,6 +157,10 @@ function App() {
         dropHoldTicks.current = heldTicks;
         const dropSpeedMultiplier = (baseDropPercent + userDropBonus) / 100 * slowFactor;
         const dropSpeedPercent = Math.round((baseDropPercent + userDropBonus) * slowFactor);
+        const spawnDensity = 1 + Math.max(0, dropSpeedPercent - 100) / 200;
+        const spawnInterval = BASE_SPAWN_INTERVAL / spawnDensity;
+        const shouldSpawn = spawnTime.current >= spawnInterval;
+        if (shouldSpawn) spawnTime.current -= spawnInterval;
         const keyboardDirection = (keys.current.right ? 1 : 0) - (keys.current.left ? 1 : 0);
         const direction = Math.sign(keyboardDirection + getGamepadDirection());
         const touchDistance = touchTarget.current === null ? null : touchTarget.current - prev.x;
